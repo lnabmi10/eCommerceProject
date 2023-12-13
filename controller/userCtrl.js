@@ -69,7 +69,7 @@ const getOneUser = asyncHandler (async (req,res)=>{
         }})
 
 const DeleteOneUser = asyncHandler (async (req,res)=>{
-   
+
             const {id} = req.params;
             
             try {
@@ -83,8 +83,10 @@ const DeleteOneUser = asyncHandler (async (req,res)=>{
             }})
         
             const updateUser = asyncHandler (async (req,res)=>{
+           
+
    
-                const {id} = req.params;
+                const {id} = req.user;
                 
                 try {
                     const  theUpdatedUser = await User.findByIdAndUpdate(id,{

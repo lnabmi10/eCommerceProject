@@ -2,7 +2,8 @@ const { generateToken } = require('../config/jwToken');
 const User = require('../models/userModel')
 const asyncHandler = require('express-async-handler');
 const valideMongodbId = require('../utils/validateMongodbId');
-const {generateRefreshToken} = require('../config/refreshToken')
+const {generateRefreshToken} = require('../config/refreshToken');
+const jwt = require('jsonwebtoken')
 
 const createUser = asyncHandler( async (req,res)=>{
     const email = req.body.email;
@@ -58,11 +59,18 @@ const loginUser = asyncHandler(
 
 const handelRefreshToken = asyncHandler(
     async (req, res) => {
-        console.log("11111")
-        const cook = req.cookies; // Using cookie-parser
-       
-
-        console.log(cook);
+        const cookie = req.cookies; 
+        if(!cookie?.refreshToken) throw new Error(' the is no refresh token')
+        const refreshToken = cookie.refreshToken;
+        console.log(refreshToken);
+        const user = await User.findOne({refreshToken})
+        if(!user) throw new Error("no refresh token in db ")
+        jwt.verify(refreshToken,process.env.JWT_SECRET,(err,decoded)=>{
+    if(err || user.id !== decoded.id){
+        throw new Error("there is somethimg wrong with refresh token ")
+    }
+    })
+        res.json(user)
     }
 );
 

@@ -2,12 +2,13 @@ const { generateToken } = require('../config/jwToken');
 const User = require('../models/userModel')
 const asyncHandler = require('express-async-handler');
 const valideMongodbId = require('../utils/validateMongodbId');
-
+const {generateRefreshToken} = require('../config/refreshToken')
 
 const createUser = asyncHandler( async (req,res)=>{
     const email = req.body.email;
     const findUser = await User.findOne({email:email});
     if (!findUser ){
+    
         // create user 
         const newUser = await User.create(req.body);
          res.json(newUser);
@@ -25,6 +26,18 @@ const loginUser = asyncHandler(
         //console.log(email,password)
         const findUser = await User.findOne({email:email})
         if (findUser && await findUser.isPasswordMatched(password)) {
+            const refreshToken = await generateRefreshToken(findUser?._id)
+            const updateUser = await User.findByIdAndUpdate(
+                findUser.id,
+                {refreshToken:refreshToken},
+                {new:true }
+                );
+
+            res.cookie("refreshToken", refreshToken, {
+                httpOnly:true,
+                maxAge:72*60*60*1000
+            })
+            console.log(refreshToken)
             res.json(
                 {_id : findUser._id,
                  firstname : findUser?.firstname,
@@ -42,6 +55,18 @@ const loginUser = asyncHandler(
 
     }
 )
+
+const handelRefreshToken = asyncHandler(
+    async (req, res) => {
+        console.log("11111")
+        const cook = req.cookies; // Using cookie-parser
+       
+
+        console.log(cook);
+    }
+);
+
+
 const getAllUser = asyncHandler (async (req,res)=>{
     try {
         const allUsers = await User.find();
@@ -150,4 +175,4 @@ const unBlockUser = asyncHandler(
 
 
 
-module.exports = {createUser,loginUser,getAllUser,getOneUser,DeleteOneUser,updateUser,blockUser,unBlockUser};
+module.exports = {createUser,loginUser,getAllUser,getOneUser,DeleteOneUser,updateUser,blockUser,unBlockUser,handelRefreshToken};

@@ -69,10 +69,39 @@ const handelRefreshToken = asyncHandler(
     if(err || user.id !== decoded.id){
         throw new Error("there is somethimg wrong with refresh token ")
     }
-    })
-        res.json(user)
+    const accessToken = generateToken(user.id)
+    res.json(accessToken)
+
+
+    })});
+
+    // log_out fonctionality
+
+const logOut = asyncHandler(async (req,res)=>{
+    
+    const cookie = req.cookies; 
+    if(!cookie?.refreshToken) throw new Error(' the is no refresh token')
+    const refreshToken = cookie.refreshToken;
+
+    const user = await User.findOne({refreshToken})
+    if(!user){
+        res.clearCookie("refreshToken",{
+            httpOnly : true,
+            secure : true,
+        })
+        return res.sendStatus(204)
     }
-);
+    await User.findOneAndUpdate({refreshToken},{
+        refreshToken : '',
+    })
+
+    res.clearCookie("refreshToken",{
+        httpOnly : true,
+        secure : true,
+    })
+    res.sendStatus(204)
+
+})
 
 
 const getAllUser = asyncHandler (async (req,res)=>{
@@ -84,10 +113,13 @@ const getAllUser = asyncHandler (async (req,res)=>{
         throw new Error(error)
         
     }
+})
 
-}
 
-)
+//
+// get one user 
+//
+
 const getOneUser = asyncHandler (async (req,res)=>{
    
         const {id} = req.params;
@@ -101,6 +133,10 @@ const getOneUser = asyncHandler (async (req,res)=>{
             throw new Error(error)
             
         }})
+
+        //
+        // delete user
+        //
 
 const DeleteOneUser = asyncHandler (async (req,res)=>{
 
@@ -116,8 +152,12 @@ const DeleteOneUser = asyncHandler (async (req,res)=>{
                 throw new Error(error)
                 
             }})
+            
+            //
+            // update user info
+            //
         
-            const updateUser = asyncHandler (async (req,res)=>{
+const updateUser = asyncHandler (async (req,res)=>{
            
 
    
@@ -139,6 +179,10 @@ const DeleteOneUser = asyncHandler (async (req,res)=>{
                     throw new Error(error)
                     
                 }})
+ 
+                //
+                // block user    
+                //
 
 const blockUser = asyncHandler(
                     async (req,res)=>{
@@ -160,6 +204,7 @@ const blockUser = asyncHandler(
                         }
                     }
                 )
+                // deblock user
 const unBlockUser = asyncHandler(
                     async (req,res)=>{
                         const {id} = req.params
@@ -183,4 +228,5 @@ const unBlockUser = asyncHandler(
 
 
 
-module.exports = {createUser,loginUser,getAllUser,getOneUser,DeleteOneUser,updateUser,blockUser,unBlockUser,handelRefreshToken};
+module.exports = {createUser,loginUser,getAllUser,getOneUser,DeleteOneUser,updateUser,
+    blockUser,unBlockUser,handelRefreshToken,logOut};

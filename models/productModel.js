@@ -22,15 +22,24 @@ var productSchema = new mongoose.Schema({
         required:true,
     },
     category : {
+        /*
         type : mongoose.Schema.Types.ObjectId,
         ref : "Category"
+        */
+       type: String,
+       required : true
     },
     brand : {
         type : String,
-        enum : ["brand1", "brand2" , "brand3"]
+       // enum : ["brand1", "brand2" , "brand3"]
+       required : true,
 
     },
-    quantity : Number,
+    quantity : {
+        type : Number,
+        required : true,
+
+    } ,
     sold : {
         type : Number,
         default : 0,
@@ -40,7 +49,8 @@ var productSchema = new mongoose.Schema({
     },
     color :{
         type : String,
-        enum : ["black", "Brown" , "red"]
+       //  enum : ["black", "Brown" , "red"]
+       required : true,
     },
     rating : [{
         star : Number ,

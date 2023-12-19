@@ -7,6 +7,7 @@ const authRouter = require('./routes/authRoute');
 const productRouter = require('./routes/productRoute');
 const { errorHandler, notFound } = require("./middlewares/errorHandler");
 const cookieParser = require('cookie-parser');
+const morgan = require('morgan')
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 dbConnect();

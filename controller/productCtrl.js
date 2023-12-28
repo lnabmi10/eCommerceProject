@@ -2,6 +2,7 @@ const Product = require('../models/productModel')
 const asyncHandler = require('express-async-handler')
 const valideMongodbId = require('../utils/validateMongodbId')
 const slugify = require('slugify')
+const { json } = require('body-parser')
 
 
 
@@ -95,17 +96,38 @@ const getOneProduct = asyncHandler(
 const getAllProducts = asyncHandler(
     async (req,res)=>{
         try {
+
+            // filtring by price
             const queryObj = {...req.query}
             console.log("queryobj befor exclude",queryObj)
-
             excludeFields = ["page","limit","sort","fields"]
             excludeFields.forEach((el) => delete queryObj[el]);
             console.log("queryobj",queryObj)
-            console.log("exclude fields",excludeFields)
+            let queryStr = JSON.stringify(queryObj);
+            queryStr = queryStr.replace(/\b(gte|lt|gt|lte)\b/g,match =>`$${match}`)
+            let queryProduct =await Product.find(JSON.parse(queryStr)) 
+           // console.log('queryStr',queryProduct)
+
+            // sorting 
+            if(req.query.sort){
+                const sortBy = req.query.sort.split(',').join(' ');
+                console.log(sortBy)
+                queryProduct = queryProduct.sort(sortBy)
+             
+            }else{
+                queryProduct = queryProduct.sort("-createdAt")
+
+            }
 
 
-            const allProduct = await Product.where("category").equals(req.query.category)
-            res.json(allProduct)
+
+
+
+
+           // const allProduct = await Product.where("category").equals(req.query.category)
+           const ProductFilterByPrice =  queryProduct
+
+            res.json(ProductFilterByPrice)
             
         } catch (error) {
             throw new Error(error)

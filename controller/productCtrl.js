@@ -102,11 +102,15 @@ const getAllProducts = asyncHandler(
             console.log("queryobj befor exclude",queryObj)
             excludeFields = ["page","limit","sort","fields"]
             excludeFields.forEach((el) => delete queryObj[el]);
-            console.log("queryobj",queryObj)
+            console.log("queryobj",queryObj) 
             let queryStr = JSON.stringify(queryObj);
+            console.log("queryStr",queryStr)
             queryStr = queryStr.replace(/\b(gte|lt|gt|lte)\b/g,match =>`$${match}`)
-            let queryProduct =await Product.find(JSON.parse(queryStr)) 
-           // console.log('queryStr',queryProduct)
+            // if queryStr = {} fin(queryStr will get all the data in product collection)
+
+            // getting the data
+
+            let queryProduct = Product.find(JSON.parse(queryStr)) 
 
             // sorting 
             if(req.query.sort){
@@ -119,13 +123,37 @@ const getAllProducts = asyncHandler(
 
             }
 
+            // limiting the fields 
+            if(req.query.fields){
+                const fields = req.query.fields.split(',').join(' ');
+                queryProduct = queryProduct.select(fields)
+
+            }
+            else{
+                queryProduct = queryProduct.select('-__v')
+
+            }
+
+            //pagination 
+            if(req.query.limit){
+            const page = req.query.page
+            const limit = req.query.limit
+            const skip =  (page-1)*limit
+            console.log(page,limit,skip)
+            if(req.query.page){
+                const countProduct= await Product.countDocuments()
+                if(skip>countProduct)throw new Error("this page is emty ")
+            }
+            queryProduct = queryProduct.skip(skip).limit(limit)
+
+            }
 
 
 
 
 
            // const allProduct = await Product.where("category").equals(req.query.category)
-           const ProductFilterByPrice =  queryProduct
+           const ProductFilterByPrice = await queryProduct
 
             res.json(ProductFilterByPrice)
             

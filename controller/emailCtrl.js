@@ -24,7 +24,7 @@ const transporter = nodemailer.createTransport({
       to: data.to, // list of receivers
       subject: data.subject, // Subject line
       text: data.text, // plain text body
-      html: data.html, // html body
+      htm: data.htm, // html body
     });
   
     console.log("Message sent: %s", info.messageId);

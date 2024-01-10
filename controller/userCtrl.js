@@ -5,6 +5,7 @@ const valideMongodbId = require('../utils/validateMongodbId');
 const {generateRefreshToken} = require('../config/refreshToken');
 const jwt = require('jsonwebtoken');
 const sendEmail = require('./emailCtrl');
+const crypto = require('crypto')
 
 const createUser = asyncHandler( async (req,res)=>{
     const email = req.body.email;
@@ -245,8 +246,8 @@ const updatePassWord = asyncHandler(async(req,res) =>{
     }else{
         res.json(findedUser)
     }
-
 })
+
 
 const forgotPassword = asyncHandler(async(req,res)=>{
 
@@ -259,9 +260,9 @@ const forgotPassword = asyncHandler(async(req,res)=>{
         const resetURL = `follow this link to reset your password, this link is valid till 10 min <a href='http://localhost:3000/api/user/resetpassword/${token} ' > click here </a>`
         const data = {
             to : email,
+            text : " hello  ",
             subject : "forgot password link, ",
-            text : " hello  "+ resetURL,
-            htm : resetURL,
+            html : resetURL,
         }
         sendEmail(data)
         res.json(token)
@@ -269,9 +270,28 @@ const forgotPassword = asyncHandler(async(req,res)=>{
         throw new Error(error)
     }
 } )
+
+const resetPassword = asyncHandler(async (req,res)=>{
+    const {password} = req.body;
+    const {token} = req.params;
+    const hashedToken = crypto.createHash('sha256').update(token).digest('hex')
+    const findedUser = await User.findOne({
+        PassWordResetToken:hashedToken,
+        passwordResetExpires: {$gt : Date.now()}
+    })
+    if(!findedUser) throw new Error(" token Expired") 
+    findedUser.password=password;
+    findedUser.PassWordResetToken=undefined;
+    findedUser.passwordResetExpires=undefined;
+
+    findedUser.save()
+    res.json(findedUser)
+
+
+})
     
 
 
 
 module.exports = {createUser,loginUser,getAllUser,getOneUser,DeleteOneUser,updateUser,
-    blockUser,unBlockUser,handelRefreshToken,logOut,updatePassWord,forgotPassword};
+    blockUser,unBlockUser,handelRefreshToken,logOut,updatePassWord,forgotPassword,resetPassword};

@@ -12,14 +12,13 @@ const authMiddleware = asyncHandler( async (req,res,next)=>{
                 const user = await User.findById(decoded.id)
                 console.log("decoded is ", decoded)
 
-                req.user = user
+                req.user = user 
                 next()
-
             }
 
             
         } catch (error) {
-            throw new Error('not autorized , token expired ,please login')
+            throw new Error('not autorized , token expired or not exists ,please login')
         }
 
     }

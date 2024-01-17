@@ -13,6 +13,8 @@ const createCategory = asyncHandler(async(req,res)=>{
 
 const updateCategory = asyncHandler(async(req,res)=>{
     const {id}=req.params
+    valideMongodbId(id)
+
         try {
             const updatedCategory = await Category.findByIdAndUpdate(id,req.body,{new:true})
             res.json(updatedCategory)
@@ -23,6 +25,8 @@ const updateCategory = asyncHandler(async(req,res)=>{
 
 const deleteCategory = asyncHandler(async(req,res)=>{
             const {id}=req.params
+            valideMongodbId(id)
+
                 try {
                     const deletedCategory = await Category.findByIdAndDelete(id)
                     res.json(deletedCategory)
@@ -30,5 +34,33 @@ const deleteCategory = asyncHandler(async(req,res)=>{
                 } catch (error) {
                     throw new Error(error)
                 }})
+const getAllCategories = asyncHandler(async(req,res)=>{
+    try {
+    const allCategories = await Category.find()
+    res.json(allCategories)
 
-module.exports = {createCategory,updateCategory}
+        
+    } catch (error) {
+        throw new Error(error)
+    }
+
+
+}
+
+)
+const getOneCategory = asyncHandler(async(req,res)=>{
+    const {id} = req.params
+    valideMongodbId(id)
+
+    try {
+    const theCategory = await Category.findById(id)
+    res.json(theCategory)
+
+        
+    } catch (error) {
+        throw new Error(error)
+    }}
+
+)
+
+module.exports = {createCategory,updateCategory,deleteCategory,getAllCategories,getOneCategory}

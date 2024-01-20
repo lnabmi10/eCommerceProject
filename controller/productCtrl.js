@@ -3,6 +3,8 @@ const asyncHandler = require('express-async-handler')
 const valideMongodbId = require('../utils/validateMongodbId')
 const slugify = require('slugify')
 const { json } = require('body-parser')
+const User = require('../models/userModel')
+
 
 
 
@@ -164,5 +166,72 @@ const getAllProducts = asyncHandler(
     }
 )
 
+const addToWishList = asyncHandler(async(req,res)=>{
+    const {_id} = req.user
 
-module.exports={createProduct,getOneProduct,getAllProducts,updateProduct,deleteProduct,}
+    const {prodId} = req.body
+
+    try {
+        const currentUser = await User.findById(_id)
+
+        let alreadyAded = currentUser.wishlist.find(  (id)=>id.toString() === prodId )
+
+
+        if(alreadyAded){
+            let user = await User.findByIdAndUpdate(_id,
+                {$pull : { wishlist : prodId}},
+                {new : true} )
+            res.json(user)
+        }else{
+            let user = await User.findByIdAndUpdate(_id,
+                {$push : { wishlist : prodId}},
+                {new : true} )
+            res.json(user)
+
+        }
+
+        
+    } catch (error) {
+        throw new Error(error)
+    }
+})
+const ratingProduct = asyncHandler(async(req,res)=>{
+    const {_id} = req.user
+    const {star,prodId}=req.body
+    
+
+    try {
+        
+    const product = await Product.findById(prodId)
+    let alreadyRated =  product.ratings.find((userId)=>userId.postedby.toString()===_id.toString())
+    console.log(alreadyRated)
+        if(alreadyRated){
+            const updateRating= await Product.updateOne({
+                ratings : {$elemMatch : alreadyRated}
+            },
+            {$set : { "ratings.$.star" : star }},
+            { new : true}
+            )
+            res.json(updateRating)
+
+
+        }else{
+            let ratedProduct = await Product.findByIdAndUpdate(prodId,
+                { $push :{
+                    ratings:{
+                        star : star,
+                        postedby : _id,
+                            }}
+                },
+                {new:true})
+
+                res.json(ratedProduct)
+
+        }
+    } catch (error) {
+        throw new Error(error)
+        
+    }})
+
+
+module.exports={createProduct,getOneProduct,getAllProducts,updateProduct,deleteProduct,addToWishList,ratingProduct}

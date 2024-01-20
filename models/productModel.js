@@ -52,10 +52,14 @@ var productSchema = new mongoose.Schema({
        //  enum : ["black", "Brown" , "red"]
        required : true,
     },
-    rating : [{
+    ratings : [{
         star : Number ,
-        postedby : {type : mongoose.Schema.Types.ObjectId}
-    }]
+        postedby : {type : mongoose.Schema.Types.ObjectId, ref:"User"}
+    },],
+    totalrating : {
+        type : Number,
+        default : 0,
+    }
 
 
 },{

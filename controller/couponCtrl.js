@@ -11,10 +11,58 @@ const  createCoupon = asyncHandler(async (req, res) => {
         throw new Error(error);s
     }
 
-}
-)
+})
+
+const getAllCoupons = asyncHandler(async(req,res)=>{
+    try {
+    const allCoupons = await Coupon.find()
+    res.json(allCoupons)
+
+        
+    } catch (error) {
+        throw new Error(error)
+    }
 
 
+})
 
 
-module.exports={createCoupon}
+const updateCoupon = asyncHandler(async(req,res)=>{
+    const {id}=req.params
+    valideMongodbId(id)
+
+        try {
+            const updatedCoupon = await Coupon.findByIdAndUpdate(id,req.body,{new:true})
+            res.json(updatedCoupon)
+    
+        } catch (error) {
+            throw new Error(error)
+        }})
+
+        const deleteCoupon = asyncHandler(async(req,res)=>{
+            const {id}=req.params
+            valideMongodbId(id)
+
+                try {
+                    const deletedCoupon = await Coupon.findByIdAndDelete(id)
+                    res.json(deletedCoupon)
+            
+                } catch (error) {
+                    throw new Error(error)
+                }})
+
+                const getOneCoupon = asyncHandler(async(req,res)=>{
+                    const {id} = req.params
+                    valideMongodbId(id)
+                
+                    try {
+                    const theCoupon = await Coupon.findById(id)
+                    res.json(theCoupon)
+                
+                        
+                    } catch (error) {
+                        throw new Error(error)
+                    }}
+                
+                )
+module.exports={createCoupon,getAllCoupons,updateCoupon,deleteCoupon,getOneCoupon}

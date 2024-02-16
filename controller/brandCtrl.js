@@ -59,8 +59,6 @@ const getOneBrand = asyncHandler(async(req,res)=>{
         
     } catch (error) {
         throw new Error(error)
-    }}
-
-)
+    }})
 
 module.exports = {createBrand,updateBrand,deleteBrand,getAllBrands,getOneBrand}

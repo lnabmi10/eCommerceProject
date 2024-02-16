@@ -16,3 +16,4 @@ const createUser = async (req,res)=>{
                 })
     }
 }
+const x = 10;

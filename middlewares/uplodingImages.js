@@ -9,15 +9,17 @@ const multerStorage =  multer.diskStorage({
 
     } ,
     filename : function(req,file,cb){
-        const uniqueSuffix =Date.now() +"-" +Math.round(Math.random() * 1e9)
-
-        cb(null,file.filename+uniqueSuffix+".jpeg")
+        const uniqueSuffix = Date.now() +"-" +Math.round(Math.random() * 1e9)
+        
+        const originName = file.originalname.split('.')[0];
+    
+        cb(null, originName + uniqueSuffix + ".jpeg")
 
     }
 })
 
 const multerFilter = (req,file,cb)=>{
-    if (file.mimetype.startswith('image') ){
+    if (file.mimetype.startsWith('image') ){
         cb(null,true)
     }else{
         cb({
@@ -38,11 +40,11 @@ const productImgResize = async (req, res, next) => {
 
     for (const file of req.files) {
         try {
-            await sharp(file.buffer)
+            await sharp(file.path)
                 .resize(300, 300)
                 .toFormat('jpeg')
                 .jpeg({ quality: 90 })
-                .toFile(`public/images/product/${file.filename}`);
+                .toFile(`publics/images/products/${file.filename}`);
         } catch (error) {
             throw new Error(`Error processing image ${file.filename}: ${error.message}`);
         }
@@ -55,11 +57,11 @@ const blogsImgResize = async (req, res, next) => {
 
     for (const file of req.files) {
         try {
-            await sharp(file.buffer)
+            await sharp(file.path)
                 .resize(300, 300)
                 .toFormat('jpeg')
                 .jpeg({ quality: 90 })
-                .toFile(`public/images/blogs/${file.filename}`);
+                .toFile(`publics/images/blogs/${file.filename}`);
         } catch (error) {
             throw new Error(`Error processing image ${file.filename}: ${error.message}`);
         }
@@ -72,11 +74,11 @@ const usersImgResize = async (req, res, next) => {
 
     for (const file of req.files) {
         try {
-            await sharp(file.buffer)
+            await sharp(file.path)
                 .resize(300, 300)
                 .toFormat('jpeg')
                 .jpeg({ quality: 90 })
-                .toFile(`public/images/users/${file.filename}`);
+                .toFile(`publics/images/users/${file.filename}`);
         } catch (error) {
             throw new Error(`Error processing image ${file.filename}: ${error.message}`);
         }

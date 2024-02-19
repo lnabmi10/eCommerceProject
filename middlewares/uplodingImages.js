@@ -33,5 +33,55 @@ const uploadImg = multer({
 
 })
 
+const productImgResize = async (req, res, next) => {
+    if (!req.files) return next();
 
-module.exports={uploadImg}
+    for (const file of req.files) {
+        try {
+            await sharp(file.buffer)
+                .resize(300, 300)
+                .toFormat('jpeg')
+                .jpeg({ quality: 90 })
+                .toFile(`public/images/product/${file.filename}`);
+        } catch (error) {
+            throw new Error(`Error processing image ${file.filename}: ${error.message}`);
+        }
+    }
+
+    next();
+};
+const blogsImgResize = async (req, res, next) => {
+    if (!req.files) return next();
+
+    for (const file of req.files) {
+        try {
+            await sharp(file.buffer)
+                .resize(300, 300)
+                .toFormat('jpeg')
+                .jpeg({ quality: 90 })
+                .toFile(`public/images/blogs/${file.filename}`);
+        } catch (error) {
+            throw new Error(`Error processing image ${file.filename}: ${error.message}`);
+        }
+    }
+
+    next();
+};
+const usersImgResize = async (req, res, next) => {
+    if (!req.files) return next();
+
+    for (const file of req.files) {
+        try {
+            await sharp(file.buffer)
+                .resize(300, 300)
+                .toFormat('jpeg')
+                .jpeg({ quality: 90 })
+                .toFile(`public/images/users/${file.filename}`);
+        } catch (error) {
+            throw new Error(`Error processing image ${file.filename}: ${error.message}`);
+        }
+    }
+
+    next();
+};
+module.exports={uploadImg,productImgResize,blogsImgResize,usersImgResize}

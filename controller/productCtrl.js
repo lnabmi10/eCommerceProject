@@ -241,11 +241,14 @@ const ratingProduct = asyncHandler(async(req,res)=>{
 
     } catch (error) {
         throw new Error(error)
-        
-    }}
     
-    )
+    }})
+
+    const uploadProductImages = asyncHandler(async (req,res)=>{
+        console.log(req.files)
+
+    })
 
 
 
-module.exports={createProduct,getOneProduct,getAllProducts,updateProduct,deleteProduct,addToWishList,ratingProduct}
+module.exports={createProduct,getOneProduct,getAllProducts,updateProduct,deleteProduct,addToWishList,ratingProduct,uploadProductImages}

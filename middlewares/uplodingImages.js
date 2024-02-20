@@ -1,6 +1,7 @@
 const multer = require('multer')
 const sharp = require('sharp')
 const path = require('path')
+const fs = require('fs')
 
 
 const multerStorage =  multer.diskStorage({
@@ -63,6 +64,8 @@ const blogsImgResize = async (req, res, next) => {
                 .toFormat('jpeg')
                 .jpeg({ quality: 90 })
                 .toFile(`publics/images/blogs/${file.filename}`);
+            
+            fs.unlinkSync(`publics/images/blogs/${file.filename}`)
         } catch (error) {
             throw new Error(`Error processing image ${file.filename}: ${error.message}`);
         }
@@ -80,6 +83,7 @@ const usersImgResize = async (req, res, next) => {
                 .toFormat('jpeg')
                 .jpeg({ quality: 90 })
                 .toFile(`publics/images/users/${file.filename}`);
+            
         } catch (error) {
             throw new Error(`Error processing image ${file.filename}: ${error.message}`);
         }

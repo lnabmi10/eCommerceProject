@@ -35,10 +35,7 @@ var blogSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId ,
         ref : "User",
     }],
-    image:{
-        type : String,
-        default : "https://cdn.pixabay.com/photo/2015/11/06/13/25/blog-1027861_640.jpg"
-    },
+    images:[],
     author : {
         type : String ,
         default : "admin",

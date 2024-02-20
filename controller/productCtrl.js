@@ -5,6 +5,7 @@ const slugify = require('slugify')
 const { json } = require('body-parser')
 const User = require('../models/userModel')
 const coudinaryUploadImg = require('../utils/cloudinary')
+const fs = require('fs')
 
 
 
@@ -260,6 +261,7 @@ const ratingProduct = asyncHandler(async(req,res)=>{
                 const newPath = await uploader(path)
                 
                 urls.push(newPath)
+              //  fs.unlinkSync(path)
 
             }
             const updateProduct = await Product.findByIdAndUpdate(id,

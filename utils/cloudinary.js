@@ -13,8 +13,7 @@ const coudinaryUploadImg = async (fileToUpload, publicId) => {
         public_id: publicId  // Specify public_id if provided
       });
   
-      console.log(result); // Output the result to the console if needed
-  
+     
       return {
         url: result.secure_url,
         public_id: result.public_id

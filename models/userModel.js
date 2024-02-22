@@ -37,7 +37,10 @@ var userSchema = new mongoose.Schema({
         type : Array,
         default : []
     },
-    adress : [{type :mongoose.Schema.Types.ObjectId  , ref: "adress"}],
+    adress : {
+        type:String,
+        default: "",
+    },
     wishlist : [{type :mongoose.Schema.Types.ObjectId ,ref : "Product" }],
     refreshToken : {
         type : String,

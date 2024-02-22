@@ -17,7 +17,7 @@ var couponSchema = new mongoose.Schema({
         required:true,
     },
     
-});
+},{timestamps:true});
 
 //Export the model
 module.exports = mongoose.model('Coupon', couponSchema);

@@ -38,18 +38,16 @@ const addToCart = asyncHandler(
            
                    //add product to existing cart
           let productsInCart = [...cartAlreadyExist.products]
+          console.log(productsInCart)
           for (let i = 0; i < productsInCart.length ;i++) {
               const {prodId , count , color} = productsInCart[i];
               const productIndex = productsInCart.findIndex(pro=> pro.prodId===prodCart.prodId);
                 if(productIndex>=0){
                 // check the product color
-                      if(productsInCart[productIndex].color = color )
+                      if(productsInCart[productIndex].color == color )
                          {
                          productsInCart[productIndex].count += count
-                         
-                         }
-                         else{
-                          productsInCart.push(prodCart)
+
                          }
                  }else{
                         productsInCart.push(prodCart)
@@ -58,7 +56,7 @@ const addToCart = asyncHandler(
             }
             const updatedCart = await Cart.findByIdAndUpdate(cartAlreadyExist._id ,{
                 products:productsInCart,
-                cartTotal: cartAlreadyExist.cartTotal + getPrice.price
+                cartTotal: cartAlreadyExist.cartTotal + getPrice.price*prodCart.count,
             },{new:true})
           
            res.json(updatedCart)

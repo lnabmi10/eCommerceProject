@@ -4,12 +4,12 @@ const mongoose = require('mongoose'); // Erase if already required
 var cartSchema = new mongoose.Schema({
     products : [
         {
-            product : {
+            prodId : {
                 type : mongoose.Schema.Types.ObjectId,
                 ref : "product",
             },
             count : Number,
-            price : Number,
+            color : String,
             
         },
     ],
@@ -30,11 +30,6 @@ var cartSchema = new mongoose.Schema({
         type : mongoose.Schema.Types.ObjectId,
          ref : "User",
     },
-    ordredFrom : {
-        type : mongoose.Schema.Types.ObjectId,
-         ref : "Seller",
-        
-    }
     
     
 },{

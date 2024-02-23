@@ -6,6 +6,9 @@ const {generateRefreshToken} = require('../config/refreshToken');
 const jwt = require('jsonwebtoken');
 const sendEmail = require('./emailCtrl');
 const crypto = require('crypto')
+const Product = require('../models/productModel')
+const Cart = require('../models/cartModel')
+
 
 const createUser = asyncHandler( async (req,res)=>{
     const email = req.body.email;
@@ -353,6 +356,7 @@ const saveAdress = asyncHandler(
         }
     }
 )
+
 
 
 

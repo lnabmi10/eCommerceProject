@@ -33,10 +33,7 @@ var userSchema = new mongoose.Schema({
         type : Boolean,
         default : false,
     },
-    cart : {
-        type : Array,
-        default : []
-    },
+    cart :  [{type :mongoose.Schema.Types.ObjectId ,ref : "Cart" }],
     adress : {
         type:String,
         default: "",

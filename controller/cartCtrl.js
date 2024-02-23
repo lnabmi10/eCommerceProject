@@ -32,8 +32,7 @@ const addToCart = asyncHandler(
             
                 let user = await User.findByIdAndUpdate(id,
                     {$push : { cart : newCart._id}},
-                    {new : true} )
-                    .populate('cart');
+                    {new : true} );
            res.json(newCart)
         }else{
            
@@ -80,20 +79,76 @@ const addToCart = asyncHandler(
 
 
 
-const getALLuserCart = asyncHandler(async(req,res)=>{
+const getAllUserCarts = asyncHandler(async(req,res)=>{
     const {id} = req.user
     valideMongodbId(id)
 
     try {
+        let userCart  = await Cart.find({ordredBy: id})
     
-        
-
+        res.json(userCart)
         
     } catch (error) {
         throw new Error(error)
     }}
 
 )
+const getAllCarts = asyncHandler(async(req,res)=>{
+   
 
+    try {
+        let userCart  = await Cart.find({})
+    
+        res.json(userCart)
+        
+    } catch (error) {
+        throw new Error(error)
+    }}
 
-module.exports={addToCart}
+)
+const deleteCart = asyncHandler(async(req,res)=>{
+    const {cartId} = req.params
+    const {id}=req.user
+    try {
+    const findcart = await Cart.findOne({_id : cartId , ordredBy : id })
+    if(!findcart){
+    const deletedCart = await Cart.findByIdAndDelete(cartId)
+    res.json(deletedCart)
+    }
+    } catch (error) {
+        throw new Error(error)
+        
+    }
+})
+
+// remove product from cart
+const removeFromCart= asyncHandler(
+    async (req,res)=> {
+
+        const {id}=req.user
+        const  {productId} = req.params;
+        const cart = await Cart.findOne({orderdBy:id, cartStatus: "not processed"})
+         console.log("this is the cart",cart.products);
+        if (!cart) {
+            return res.status(401).send("No Cart Found")
+          } else if (cart.products.length==0) {
+              return res.status(404).send('The Cart is emty')
+              
+          } 
+          let productsInCart = [...cart.products]
+          
+          let index = productsInCart.indexOf(productId)
+          console.log(index)
+          
+          if (index === -1 ) {
+              return res.status(404).send('The Product is not in the Cart')
+          }
+          // remove item from array using filter() method
+          cart.products = cart.products.filter((item)=> item.toString()!==productId)
+          await cart.save()
+          res.json(cart.products)
+      }
+    
+   );
+
+module.exports={addToCart,getAllCarts,getAllUserCarts,removeFromCart,deleteCart }

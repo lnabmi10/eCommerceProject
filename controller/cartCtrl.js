@@ -18,9 +18,9 @@ const addToCart = asyncHandler(
         
         try {
             let findUser = await User.findById(id)
-            let getPrice = await Product.findById({_id:prodCart.prodId}).select("price").exec();
+
+            let getPrice = await Product.findById(prodCart.prodId).select("price").exec();
         // check if user alredy have cart
-        console.log(getPrice.price)
         const cartAlreadyExist = await Cart.findOne({ ordredBy: findUser._id, cartStatus: "not processed" });
 
         if(!cartAlreadyExist){
@@ -38,29 +38,40 @@ const addToCart = asyncHandler(
            
                    //add product to existing cart
           let productsInCart = [...cartAlreadyExist.products]
-          console.log(productsInCart)
+          
+
           for (let i = 0; i < productsInCart.length ;i++) {
-              const {prodId , count , color} = productsInCart[i];
-              const productIndex = productsInCart.findIndex(pro=> pro.prodId===prodCart.prodId);
-                if(productIndex>=0){
-                // check the product color
-                      if(productsInCart[productIndex].color == color )
-                         {
-                         productsInCart[productIndex].count += count
+            
+
+              let {prodId , count , color} = productsInCart[i];
+              prodId = prodId.toString()
+             
+            console.log(productsInCart[i])
+            console.log("etap" + i + "##################################################################")
+
+              if(prodId===prodCart.prodId && color === prodCart.color ){
+                
+                         console.log("il vas just augmenter le count")
+                         productsInCart[i].count += count
+                          console.log(productsInCart[i])
 
                          }
-                 }else{
-                        productsInCart.push(prodCart)
-              }
 
+              else{
+                productsInCart.push(prodCart);
+                i++        
             }
+        }
+        
+
             const updatedCart = await Cart.findByIdAndUpdate(cartAlreadyExist._id ,{
                 products:productsInCart,
                 cartTotal: cartAlreadyExist.cartTotal + getPrice.price*prodCart.count,
             },{new:true})
-          
+        
+        
            res.json(updatedCart)
-
+        
          
       }
            

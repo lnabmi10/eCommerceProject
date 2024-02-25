@@ -150,5 +150,25 @@ const removeFromCart= asyncHandler(
       }
     
    );
+   // changement de l status de la cart
+const updateCartStatus = asyncHandler(async (req,res)=>{
+    const {id} = req.user;
+    valideMongodbId(id)
+    const {status} = req.body;
+    const {cartId} = req.params
+
+    try {
+        
+    const  cart = await Cart.findByIdAndUpdate(cartId ,{cartStatus : status},{new:true});
+    
+
+        res.json(cart)
+    } catch (error) {
+        throw new Error(error)
+
+    }
+
+})
+
 
 module.exports={addToCart,getAllCarts,getAllUserCarts,removeFromCart,deleteCart }

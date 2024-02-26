@@ -8,7 +8,7 @@ const  createCoupon = asyncHandler(async (req, res) => {
         res.json(newCoupon)
 
     } catch (error) {
-        throw new Error(error);s
+        throw new Error(error);
     }
 
 })

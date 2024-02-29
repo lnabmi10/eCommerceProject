@@ -13,6 +13,8 @@ var productSchema = new mongoose.Schema({
         unique:true,
         lowercase : true,
     },
+    shop :  [{type :mongoose.Schema.Types.ObjectId ,ref : "Shop" }],
+
     description:{
         type:String,
         required:true,

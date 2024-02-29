@@ -8,7 +8,7 @@ var couponSchema = new mongoose.Schema({
         unique:true,
         uppercase : true,
     },
-    shopId : {type :mongoose.Schema.Types.ObjectId ,ref : "Product" },
+    shopId : {type :mongoose.Schema.Types.ObjectId ,ref : "Shop" },
 
     codeCoupon:{
         type:String,

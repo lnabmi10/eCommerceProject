@@ -7,11 +7,11 @@ var shopSchema = new mongoose.Schema({
         required:true,
         trim : true
     },
-    owner :{type :mongoose.Schema.Types.ObjectId ,  ref : "User" },
-    bankAccount : { type : String,
-    },
-    cinImages : {type : Array,
-    },
+    owner :{type :mongoose.Schema.Types.ObjectId ,  ref : "Seller" },
+    feesStatus : { type : Number,
+        defaults:0},
+    
+    
     isVerified : {
         type : Boolean,
         default : false,

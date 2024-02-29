@@ -22,6 +22,9 @@ var userSchema = new mongoose.Schema({
         required:true,
         unique:true,
     },
+    image:{
+        Type : String,
+    },
     password:{
         type:String,
         required:true,
@@ -30,11 +33,14 @@ var userSchema = new mongoose.Schema({
         type:String,
         default: "user",
     },
+    notification : [{type :mongoose.Schema.Types.ObjectId ,ref : "Notification" }],
+    inbox : {type :mongoose.Schema.Types.ObjectId ,ref : "Inbox" },
     isBlocked : {
         type : Boolean,
         default : false,
     },
     cart :  [{type :mongoose.Schema.Types.ObjectId ,ref : "Cart" }],
+    order :  [{type :mongoose.Schema.Types.ObjectId ,ref : "Order" }],
     adress : {
         type:String,
         default: "",

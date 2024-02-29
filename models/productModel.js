@@ -21,14 +21,10 @@ var productSchema = new mongoose.Schema({
         type:Number,
         required:true,
     },
-    category : {
-        /*
-        type : mongoose.Schema.Types.ObjectId,
-        ref : "Category"
-        */
-       type: String,
-       required : true
-    },
+    category :  { type :mongoose.Schema.Types.ObjectId ,  ref : "Category" },
+    
+    shop : { type :mongoose.Schema.Types.ObjectId ,  ref : "Shop" },
+
     brand : {
         type : String,
        // enum : ["brand1", "brand2" , "brand3"]

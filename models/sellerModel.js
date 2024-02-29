@@ -4,7 +4,7 @@ var sellerSchema = new mongoose.Schema({
     
     userId : {type :mongoose.Schema.Types.ObjectId ,ref : "User" },
 
-    identityCardImg : { type: String, required: true}, 
+    identityCardImg : [{ type: String, required: true}], 
      
     role :{
         type:String,
@@ -19,24 +19,7 @@ var sellerSchema = new mongoose.Schema({
         default : false,
     },
     //bank information
-    bankInformation : {
-        bankName : {
-            type : String,
-            required  : true,
-        },
-        accountNumber : {
-            type : Number,
-            required : true,
-        } ,
-        branchCode : {
-            type : Number,
-            required :true,
-        },
-        nameOnAccount : {
-           type : String,
-           required : true,
-       }
-    },
+    bankInformation : {type :mongoose.Schema.Types.ObjectId ,ref : "BankInfo" },
     withrawalAlowed : {
         type : Boolean,
         default : false,

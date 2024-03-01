@@ -47,6 +47,10 @@ var shopSchema = new mongoose.Schema({
                              required : false
         }
     }],
+    sold : {  
+         type : Number, 
+         default : 0 
+    },
 
 
 

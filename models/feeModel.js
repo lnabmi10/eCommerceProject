@@ -1,7 +1,7 @@
 const mongoose = require('mongoose'); // Erase if already required
 
 // Declare the Schema of the Mongo model
-var feesSchema = new mongoose.Schema({
+var feeSchema = new mongoose.Schema({
    
 
     title: {
@@ -22,4 +22,4 @@ var feesSchema = new mongoose.Schema({
 },{timestamps:true});
 
 //Export the model
-module.exports = mongoose.model('Fees', feesSchema);
+module.exports = mongoose.model('Fee', feeSchema);

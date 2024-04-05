@@ -11,7 +11,7 @@ var adminSchema = new mongoose.Schema({
         default: "admin",
     },
     blogId : {type :mongoose.Schema.Types.ObjectId ,ref : "Blog" },
-    reportId : {type :mongoose.Schema.Types.ObjectId ,ref : "ReportId" },
+    reportId : {type :mongoose.Schema.Types.ObjectId ,ref : "Report" },
     annoncementId : {type :mongoose.Schema.Types.ObjectId ,ref : "Annoncement" },
    isSuspended :{
         type : Boolean,

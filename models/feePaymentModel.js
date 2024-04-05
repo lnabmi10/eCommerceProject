@@ -1,12 +1,12 @@
 const mongoose = require('mongoose'); // Erase if already required
 
 // Declare the Schema of the Mongo model
-var feesPaymentSchema = new mongoose.Schema({
+var feePaymentSchema = new mongoose.Schema({
    
-    feesId : {type :mongoose.Schema.Types.ObjectId ,ref : "Fees" },
+    feeId : {type :mongoose.Schema.Types.ObjectId ,ref : "Fee" },
     sellerPaymentId : {type :mongoose.Schema.Types.ObjectId ,ref : "SellerPayment" },
 
 },{timestamps:true});
 
 //Export the model
-module.exports = mongoose.model('FeesPayment', feesPaymentSchema);
+module.exports = mongoose.model('FeePayment', feePaymentSchema);

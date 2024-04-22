@@ -6,11 +6,7 @@ var clientSchema = new mongoose.Schema({
 
     
     bankInformation : {type :mongoose.Schema.Types.ObjectId ,ref : "BankInfo" },
-    role :{
-        type:String,
-        default: "client",
-    },
-    
+  
 },
 {
     timestamps : true

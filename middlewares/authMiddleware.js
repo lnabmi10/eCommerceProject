@@ -42,5 +42,39 @@ const isAdmin = asyncHandler(
 
     }
 );
+const isClient = asyncHandler(
+    async (req,res,next)=>{
+    
+        const {email}=req.user
+        const clientUser = await User.findOne({email})
+        console.log(clientUser)
+        if(clientUser.role !== "client"){
+            throw new Error('you a not an client')
 
-module.exports = {authMiddleware,isAdmin}
+        }else{
+            next()
+        }
+        
+
+    }
+);
+const isSeller = asyncHandler(
+    async (req,res,next)=>{
+    
+        const {email}=req.user
+        const sellerUser = await User.findOne({email})
+        console.log(sellerUser)
+        if(sellerUser.role !== "seller"){
+            throw new Error('you a not an seller')
+
+        }else{
+            next()
+        }
+        
+
+    }
+);
+
+
+
+module.exports = {authMiddleware,isAdmin,isClient,isSeller}

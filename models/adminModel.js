@@ -6,10 +6,6 @@ var adminSchema = new mongoose.Schema({
 
     identity: [{ type: String, required: true}], 
      
-    role :{
-        type:String,
-        default: "admin",
-    },
     blogId : {type :mongoose.Schema.Types.ObjectId ,ref : "Blog" },
     reportId : {type :mongoose.Schema.Types.ObjectId ,ref : "Report" },
     annoncementId : {type :mongoose.Schema.Types.ObjectId ,ref : "Annoncement" },

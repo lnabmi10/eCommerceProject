@@ -32,4 +32,6 @@ var bankInfoSchema = new mongoose.Schema({
 
 });
 
+
+
 module.exports = mongoose.model("BankInfo", bankInfoSchema);

@@ -5,11 +5,7 @@ var sellerSchema = new mongoose.Schema({
     userId : {type :mongoose.Schema.Types.ObjectId ,ref : "User" },
 
     identityCardImg : [{ type: String, required: true}], 
-     
-    role :{
-        type:String,
-        default: "seller",
-    },
+    
     isBlocked : {
         type : Boolean,
         default : false,
@@ -28,7 +24,7 @@ var sellerSchema = new mongoose.Schema({
         type : Number,  
         default : 0,
     },
-    shopId : {type :mongoose.Schema.Types.ObjectId ,ref : "Shop" },
+    shopId : [{type :mongoose.Schema.Types.ObjectId ,ref : "Shop" }],
    
     
 },

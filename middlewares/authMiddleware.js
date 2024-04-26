@@ -1,6 +1,9 @@
 const User = require('../models/userModel')
 const jwt = require('jsonwebtoken')
 const asyncHandler = require('express-async-handler')
+const Seller = require('../models/sellerModel')
+const Shop = require('../models/shopModel')
+
 
 const authMiddleware = asyncHandler( async (req,res,next)=>{
     let token ;
@@ -74,7 +77,29 @@ const isSeller = asyncHandler(
 
     }
 );
+const isShopOwner = asyncHandler(
+    async (req,res,next)=>{
+        const {shopid}=req.params
+        const {id}=req.user
+
+        const shop = await Shop.findById(shopid)
+        
+        const sellerUser = await Seller.findOne({ userId :id })
+
+        console.log(sellerUser)
+        console.log(shop)
+
+        if(shop.owner.toString() !== sellerUser._id.toString()){
+            throw new Error('it s not your shop')
+
+        }else{
+            next()
+        }
+        
+
+    }
+);
 
 
 
-module.exports = {authMiddleware,isAdmin,isClient,isSeller}
+module.exports = {authMiddleware,isAdmin,isClient,isSeller,isShopOwner}

@@ -13,7 +13,6 @@ var productSchema = new mongoose.Schema({
         unique:true,
         lowercase : true,
     },
-    shop :  [{type :mongoose.Schema.Types.ObjectId ,ref : "Shop" }],
 
     description:{
         type:String,
@@ -23,8 +22,10 @@ var productSchema = new mongoose.Schema({
         type:Number,
         required:true,
     },
-    category :  { type :mongoose.Schema.Types.ObjectId ,  ref : "Category" },
-    
+    category :  { type:String,
+        required:true, },
+
+
     shop : { type :mongoose.Schema.Types.ObjectId ,  ref : "Shop" },
 
     brand : {

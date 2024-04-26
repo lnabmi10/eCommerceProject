@@ -9,16 +9,27 @@ const fs = require('fs')
 
 
 
-
 // create Product 
 const createProduct =  asyncHandler(
     async (req,res)=>{
 
+        const {shopid} = req.params
         try{
             if(req.body.title){
                 req.body.slug=slugify(req.body.title)
             }
-            const newProduct = await Product.create(req.body)
+            const newProduct = await Product.create({
+            title : req?.body.title,
+            slug: req.body.slug,
+            description : req?.body.description,
+            price : req?.body.price,
+            category : req?.body.category,
+            brand  : req?.body.brand,
+            quantity: req?.body.quantity,
+            sold :  req?.body.sold,
+            color :  req?.body.color,
+            shop : shopid,
+            })
             res.json(newProduct)
 
         }catch(err){

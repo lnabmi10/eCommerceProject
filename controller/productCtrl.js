@@ -40,10 +40,10 @@ const createProduct =  asyncHandler(
 // update Product
 
 const updateProduct = asyncHandler(async(req,res)=>{
-    console.log(req.body)
+ 
     const {id} = req.body;
    // valideMongodbId(id);
-   console.log(id)
+   
     try {
         if(req.body.title){
             req.body.slug = slugify(req.body.title) 

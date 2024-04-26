@@ -3,6 +3,8 @@ const jwt = require('jsonwebtoken')
 const asyncHandler = require('express-async-handler')
 const Seller = require('../models/sellerModel')
 const Shop = require('../models/shopModel')
+const Product = require('../models/productModel')
+
 
 
 const authMiddleware = asyncHandler( async (req,res,next)=>{
@@ -13,7 +15,6 @@ const authMiddleware = asyncHandler( async (req,res,next)=>{
             if(token){
                 const decoded = jwt.verify(token,process.env.JWT_SECRET)
                 const user = await User.findById(decoded.id)
-                console.log("decoded is ", decoded)
 
                 req.user = user 
                 next()
@@ -66,7 +67,6 @@ const isSeller = asyncHandler(
     
         const {email}=req.user
         const sellerUser = await User.findOne({email})
-        console.log(sellerUser)
         if(sellerUser.role !== "seller"){
             throw new Error('you a not an seller')
 
@@ -86,8 +86,7 @@ const isShopOwner = asyncHandler(
         
         const sellerUser = await Seller.findOne({ userId :id })
 
-        console.log(sellerUser)
-        console.log(shop)
+        
 
         if(shop.owner.toString() !== sellerUser._id.toString()){
             throw new Error('it s not your shop')
@@ -99,7 +98,28 @@ const isShopOwner = asyncHandler(
 
     }
 );
+const isProductSeller = asyncHandler(
+    async (req,res,next)=>{
+        const {email}=req.user
+        const {id} = req.body;
+        const findProduct = await Product.findById(id)
+        const sellerUser = await User.findOne({email})
+        const productSeller = await Seller.findOne({ userId :sellerUser.id })
+        const shop = await Shop.findById(findProduct.shop)
 
 
 
-module.exports = {authMiddleware,isAdmin,isClient,isSeller,isShopOwner}
+if(shop.owner.toString() !== productSeller.id.toString()){
+   throw new Error('it s not your shop')
+
+}else{
+   next()
+}
+        
+
+    }
+);
+
+
+
+module.exports = {authMiddleware,isAdmin,isClient,isSeller,isShopOwner,isProductSeller}

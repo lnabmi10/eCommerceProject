@@ -4,7 +4,6 @@ const Shop = require('../models/shopModel')
 const Seller = require('../models/sellerModel')
 
 
-
 const  createShop = asyncHandler(async (req, res) => {
 
     const {id} = req.user

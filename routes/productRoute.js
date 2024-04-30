@@ -7,13 +7,13 @@ const router = express.Router();
 
 
 router.post("/createproduct/:shopid",authMiddleware,isShopOwner,createProduct )
-router.put("/upload/:id",authMiddleware,uploadImg.array('images',10),productImgResize,uploadProductImages)
+router.put("/upload/:id",authMiddleware,isProductSeller,uploadImg.array('images',10),productImgResize,uploadProductImages)
 router.get("/getoneproduct/:id",getOneProduct)
 router.get("/getallproducts",getAllProducts)
-router.put("/updateproduct",authMiddleware,isProductSeller,updateProduct)
+router.put("/updateproduct/:id",authMiddleware,isProductSeller,updateProduct)
 router.put("/addproducttowishlist",authMiddleware,addToWishList)
 router.put("/ratingproduct",authMiddleware,ratingProduct )
-router.delete("/deleteproduct/:id",authMiddleware,isAdmin,deleteProduct)
+router.delete("/deleteproduct/:id",authMiddleware,isProductSeller,deleteProduct)
 
 
 

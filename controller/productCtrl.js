@@ -293,5 +293,6 @@ const ratingProduct = asyncHandler(async(req,res)=>{
     })
 
 
+    
 
 module.exports={createProduct,getOneProduct,getAllProducts,updateProduct,deleteProduct,addToWishList,ratingProduct,uploadProductImages}

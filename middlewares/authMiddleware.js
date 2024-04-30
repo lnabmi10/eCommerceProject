@@ -101,10 +101,10 @@ const isShopOwner = asyncHandler(
 const isProductSeller = asyncHandler(
     async (req,res,next)=>{
         const {email}=req.user
-        const {id} = req.body;
+        const {id} = req.params;
         const findProduct = await Product.findById(id)
-        const sellerUser = await User.findOne({email})
-        const productSeller = await Seller.findOne({ userId :sellerUser.id })
+        const connectedUser = await User.findOne({email})
+        const productSeller = await Seller.findOne({ userId :connectedUser.id })
         const shop = await Shop.findById(findProduct.shop)
 
 

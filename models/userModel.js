@@ -45,6 +45,7 @@ var userSchema = new mongoose.Schema({
         type:String,
         default: "",
     },
+    bankInformationId : {type :mongoose.Schema.Types.ObjectId ,ref : "BankInfo" },
     wishlist : [{type :mongoose.Schema.Types.ObjectId ,ref : "Product" }],
     refreshToken : {
         type : String,

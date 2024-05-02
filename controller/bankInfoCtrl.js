@@ -21,17 +21,21 @@ const createBankDoc =  asyncHandler(
                 nameOnAccount : req?.body.nameOnAccount,
                 userId : id
             })
+            const docCreted = await BankInfo.findOne({userId:id})
+            console.log(docCreted)
             const  theUpdatedUser = await User.findByIdAndUpdate(id,{
                 role : "client",   
+                bankInformationId : docCreted.id,
             },{
                 new : true
             })
             res.json(newBankDoc)
+            
 
         }catch(err){
             throw new Error(err)
 
-        }   }
-)
+        }   })
 
 module.exports = {createBankDoc}
+

@@ -171,4 +171,4 @@ const updateCartStatus = asyncHandler(async (req,res)=>{
 })
 
 
-module.exports={addToCart,getAllCarts,getAllUserCarts,removeFromCart,deleteCart }
+module.exports={addToCart,getAllCarts,updateCartStatus,getAllUserCarts,removeFromCart,deleteCart }

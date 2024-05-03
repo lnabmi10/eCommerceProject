@@ -4,29 +4,34 @@ const valideMongodbId = require('../utils/validateMongodbId')
 const User = require('../models/userModel')
 const Order = require('../models/orderModal')
 const Cart = require('../models/cartModel')
+const Product = require('../models/productModel')
 
 
 
 
-const createOrder =  asyncHandler(
+
+const createOrders =  asyncHandler(
 
     async (req,res)=>{
     const {id} = req.user
     valideMongodbId(id)
     const {cartId} = req.params
-    let findUser = await User.findById(id)
-
 
         try{
-            const cart = Cart.findById(cartId)
+            let findUser = await User.findById(id)
+            const cart = await Cart.findById(cartId)
 
-            
-            
-            
+            let oneProdId = cart.products[1].prodId
+
+            const productOne = await Product.findById(oneProdId)
+            res.json(productOne)
+
+
+
 
         }catch(err){
             throw new Error(err)
 
         }   })
 
-module.exports = {createOrder}
+module.exports = {createOrders}

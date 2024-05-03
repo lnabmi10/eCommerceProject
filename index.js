@@ -14,6 +14,7 @@ const cartRouter = require('./routes/cartRoute')
 const shopRouter = require('./routes/shopRoute')
 const bankInfoRouter = require('./routes/bankInfoRoute')
 const sellerRouter = require('./routes/sellerRoute')
+const orderRouter = require('./routes/orderRoute')
 const { errorHandler, notFound } = require("./middlewares/errorHandler");
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan')
@@ -35,6 +36,7 @@ app.use('/api/cart/',cartRouter)
 app.use('/api/shop/',shopRouter)
 app.use('/api/bankinfo/',bankInfoRouter)
 app.use('/api/seller/',sellerRouter)
+app.use('/api/order/',orderRouter)
 
 app.use(errorHandler)
 app.use(notFound)

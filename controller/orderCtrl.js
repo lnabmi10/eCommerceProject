@@ -53,28 +53,29 @@ const createOrders =  asyncHandler(
             let isShopInOrders = false
             for (let j = 0; j < allOrdersOnethisCart.length; j++) {
                 if(shopId === allOrdersOnethisCart[j].orderShopId ){
-                    isShopInOrders = true
                     allOrdersOnethisCart[j].productsOnthisOrder.push({prodId: oneOtherProd,
                                                                     prodPrice: productOther.price,
                                                                     prodQty: cart.products[i].count,
-                                                                    prodTotal: productOne.price * cart.products[i].count,
-                                                                    prodColor : productOne.color  }
-                                                               
-                                            
-                                           )
-
+                                                                    prodTotal: productOther.price * cart.products[i].count,
+                                                                    prodColor : productOther.color  }
+                                                               )}
+                else {
+                    allOrdersOnethisCart.push({
+                        orderShopId : shopId,
+                        productsOnthisOrder : [{prodId: oneProdId,
+                                                prodPrice: productOther.price,
+                                                prodQty: cart.products[i].count,
+                                                prodTotal: productOther.price * cart.products[i].count,
+                                                prodColor : productOther.color  }
+                                            ],
+                        DiscountonThisShop : shopOther.shopName,
+                         
+                       })
                 }
                 
-           }
+           }            }
 
-            }
-
-
-
-            i
-
-
-           res.json(ordersProducts)
+           res.json(allOrdersOnethisCart)
 
 
 

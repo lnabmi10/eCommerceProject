@@ -17,3 +17,21 @@ const createUser = async (req,res)=>{
     }
 }
 const x = 10;
+
+
+
+const productOne = await Product.findById(oneProdId)
+            let shopId = productOne.shop
+            let shopOne = await Shop.findById(shopId)
+
+            allOrdersOnethisCart.push({
+            orderShopId : shopOne.id.toString(),
+            productsOnthisOrder : [{prodId: oneProdId,
+                                    prodPrice: productOne.price,
+                                    prodQty: cart.products[0].count,
+                                    prodTotal: productOne.price * cart.products[0].count,
+                                    prodColor : productOne.color  }
+                                ],
+            DiscountonThisShop : shopOne.shopName,
+             
+           })

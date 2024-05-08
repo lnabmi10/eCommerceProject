@@ -28,8 +28,7 @@ const createOrders =  asyncHandler(
                 return res.status(404).json({ message: "Cart not found" })
             }
 
-            numberOfProduct = cart.products.length
-            console.log(numberOfProduct)
+           
 
             for (const oneProduct of cart.products) {
                 const { prodId, count,color } = oneProduct
@@ -57,7 +56,7 @@ const createOrders =  asyncHandler(
                 })
             } else {
                 allOrdersOnethisCart.push({
-                    orderShopId: shop._id.toString(),
+                    orderShopId: shop._id,
                     productsOnthisOrder: [{
                         prodId: prodId,
                         prodPrice: product.price,
@@ -70,10 +69,29 @@ const createOrders =  asyncHandler(
             }
         }
 
-           res.json(allOrdersOnethisCart)
+          
 
+           for (const oneOrder of allOrdersOnethisCart) {
+            {
+            console.log("shop ---------")
 
-
+            
+            for (const thisProduct of oneOrder.productsOnthisOrder) {
+                console.log(thisProduct.prodId)
+                console.log(thisProduct.prodPrice)
+                console.log(thisProduct.prodQty)
+                console.log(thisProduct.prodColor)
+            }
+            const newOrder = await Order.create({products : oneOrder.productsOnthisOrder,
+                shopId : oneOrder.orderShopId,
+                cartId : cart._id})
+                console.log(newOrder)
+            
+               
+            }
+            }
+        
+            
 
         }catch(err){
             throw new Error(err)

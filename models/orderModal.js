@@ -10,7 +10,8 @@ var orderSchema = new mongoose.Schema({
             },
             count : Number,
             color : String,
-            
+            price : Number,
+            prodTotal : Number,
                     },
     ],
 

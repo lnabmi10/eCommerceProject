@@ -17,63 +17,58 @@ const createOrders =  asyncHandler(
     const {id} = req.user
     valideMongodbId(id)
     const {cartId} = req.params
+    
 
         try{
             let allOrdersOnethisCart = []
-            
             let findUser = await User.findById(id)
             const cart = await Cart.findById(cartId)
+
+            if (!cart) {
+                return res.status(404).json({ message: "Cart not found" })
+            }
+
             numberOfProduct = cart.products.length
+            console.log(numberOfProduct)
 
-
-            let oneProdId = cart.products[0].prodId
-
-            const productOne = await Product.findById(oneProdId)
-            let shopId = productOne.shop
-            let shopOne = await Shop.findById(shopId)
-
-            allOrdersOnethisCart.push({
-            orderShopId : shopOne.id.toString(),
-            productsOnthisOrder : [{prodId: oneProdId,
-                                    prodPrice: productOne.price,
-                                    prodQty: cart.products[0].count,
-                                    prodTotal: productOne.price * cart.products[0].count,
-                                    prodColor : productOne.color  }
-                                ],
-            DiscountonThisShop : shopOne.shopName,
-             
-           })
-
-           for (let i = 1; i < numberOfProduct; i++) {
-
-            let oneOtherProd = cart.products[i].prodId
-            const productOther = await Product.findById(oneOtherProd)
-            let shopId = productOther.shop
-            let shopOther = await Shop.findById(shopId)
-            let isShopInOrders = false
-            for (let j = 0; j < allOrdersOnethisCart.length; j++) {
-                if(shopId === allOrdersOnethisCart[j].orderShopId ){
-                    allOrdersOnethisCart[j].productsOnthisOrder.push({prodId: oneOtherProd,
-                                                                    prodPrice: productOther.price,
-                                                                    prodQty: cart.products[i].count,
-                                                                    prodTotal: productOther.price * cart.products[i].count,
-                                                                    prodColor : productOther.color  }
-                                                               )}
-                else {
-                    allOrdersOnethisCart.push({
-                        orderShopId : shopId,
-                        productsOnthisOrder : [{prodId: oneProdId,
-                                                prodPrice: productOther.price,
-                                                prodQty: cart.products[i].count,
-                                                prodTotal: productOther.price * cart.products[i].count,
-                                                prodColor : productOther.color  }
-                                            ],
-                        DiscountonThisShop : shopOther.shopName,
-                         
-                       })
+            for (const oneProduct of cart.products) {
+                const { prodId, count,color } = oneProduct
+    
+                // Find the product details
+                const product = await Product.findById(prodId)
+    
+                if (!product) {
+                    
+                    continue
                 }
-                
-           }            }
+                const shop = await Shop.findById(product.shop)
+
+            if (!shop) {
+                continue
+            }
+            const existingOrder = allOrdersOnethisCart.find(order => order.orderShopId.toString() === shop._id.toString())
+            if (existingOrder) {
+                existingOrder.productsOnthisOrder.push({
+                    prodId: prodId,
+                    prodPrice: product.price,
+                    prodQty: count,
+                    prodTotal: product.price * count,
+                    prodColor: color
+                })
+            } else {
+                allOrdersOnethisCart.push({
+                    orderShopId: shop._id.toString(),
+                    productsOnthisOrder: [{
+                        prodId: prodId,
+                        prodPrice: product.price,
+                        prodQty: count,
+                        prodTotal: product.price * count,
+                        prodColor: color
+                    }],
+                    DiscountonThisShop: shop.shopName
+                })
+            }
+        }
 
            res.json(allOrdersOnethisCart)
 

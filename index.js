@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors")
 const dbConnect = require("./config/dbConnect");
 const app = express();
 const dotenv = require("dotenv").config();
@@ -15,10 +16,11 @@ const shopRouter = require('./routes/shopRoute')
 const bankInfoRouter = require('./routes/bankInfoRoute')
 const sellerRouter = require('./routes/sellerRoute')
 const orderRouter = require('./routes/orderRoute')
+app.use(cors())
+
 const { errorHandler, notFound } = require("./middlewares/errorHandler");
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan')
-
 app.use(morgan("dev"))
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

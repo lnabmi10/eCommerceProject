@@ -141,7 +141,21 @@ const getOneUser = asyncHandler (async (req,res)=>{
         //
         // delete user
         //
-
+const getTheConnectedUser = asyncHandler(async (req,res)=>{
+   
+        const {id} = req.user;
+        valideMongodbId(id);
+        try {
+            const  theconnectedUser = await User.findById(id)
+            res.json(theconnectedUser)
+           
+            
+        } catch (error) {
+            throw new Error(error)
+            
+    }
+})
+        
 const DeleteOneUser = asyncHandler (async (req,res)=>{
 
             const {id} = req.params;
@@ -360,5 +374,5 @@ const saveAdress = asyncHandler(
 
 
 
-module.exports = {createUser,loginUser,getAllUser,getOneUser,DeleteOneUser,updateUser,
+module.exports = {createUser,loginUser,getAllUser,getOneUser,DeleteOneUser,updateUser,getTheConnectedUser,
     blockUser,unBlockUser,handelRefreshToken,logOut,updatePassWord,forgotPassword,saveAdress,getWishlist,resetPassword,loginAdmin};

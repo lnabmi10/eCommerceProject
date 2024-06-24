@@ -37,5 +37,22 @@ const createBankDoc =  asyncHandler(
 
         }   })
 
-module.exports = {createBankDoc}
+
+const getBankDetails = asyncHandler(
+  async (req, res) => {
+    const {id} = req.user
+    valideMongodbId(id)
+    try {
+      
+      const bankDetails = await BankInfo.find({ userId: id })
+      res.json(bankDetails)
+      
+    } catch (error) {
+            throw new Error(err)
+      
+    }
+  
+     }
+   )     
+module.exports = {createBankDoc,getBankDetails}
 

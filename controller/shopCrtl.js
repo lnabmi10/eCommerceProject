@@ -33,8 +33,30 @@ const  createShop = asyncHandler(async (req, res) => {
 })
 
 
+const  getYourShop = asyncHandler(async (req, res) => {
+
+    const {id} = req.user
+    valideMongodbId(id)
+
+    try {
+        const shopOwner = await Seller.findOne({ userId: id })
+        const sellerID = shopOwner._id.toString()
+        
+        console.log("sellerId",sellerID)
+
+        const shop = await Shop.find({ owner: sellerID })
+        if(shop){
+            console.log(shop)
+        res.json(shop)
+    }
+
+    } catch (error) {
+        throw new Error(error)
+    }
+
+})
 
 
 
 
-module.exports={createShop}
+module.exports={createShop,getYourShop}

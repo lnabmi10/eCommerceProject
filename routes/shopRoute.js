@@ -6,6 +6,6 @@ const router = express.Router();
 
 
 router.post("/createshop",authMiddleware,isSeller,createShop )
-router.get("/getyourshop",authMiddleware,isSeller,getYourShop )
+router.get("/getyourshop",authMiddleware,getYourShop )
 
 module.exports=router

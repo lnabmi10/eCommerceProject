@@ -1,4 +1,3 @@
-const BankInfo = require('../models/bankInfoModel')
 const asyncHandler = require('express-async-handler')
 const valideMongodbId = require('../utils/validateMongodbId')
 const User = require('../models/userModel')
@@ -6,6 +5,7 @@ const Order = require('../models/orderModal')
 const Cart = require('../models/cartModel')
 const Product = require('../models/productModel')
 const Shop = require('../models/shopModel')
+const BankInfo = require('../models/bankInfoModel')
 
 
 

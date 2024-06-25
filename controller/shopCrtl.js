@@ -2,6 +2,7 @@ const asyncHandler = require('express-async-handler');
 const valideMongodbId = require('../utils/validateMongodbId');
 const Shop = require('../models/shopModel')
 const Seller = require('../models/sellerModel')
+const User = require('../models/userModel')
 
 
 const  createShop = asyncHandler(async (req, res) => {
@@ -33,21 +34,23 @@ const  createShop = asyncHandler(async (req, res) => {
 })
 
 
+
 const  getYourShop = asyncHandler(async (req, res) => {
 
     const {id} = req.user
     valideMongodbId(id)
 
     try {
-        const shopOwner = await Seller.findOne({ userId: id })
-        const sellerID = shopOwner._id.toString()
-        
-        console.log("sellerId",sellerID)
+        const user = await User.findById(id)
+        if (user.role === "seller"){
+            const seller = await Seller.findOne({userId : id})
+            sellerId=seller._id
+            const shop = await Shop.find({owner : sellerId})
+            if(shop){
 
-        const shop = await Shop.find({ owner: sellerID })
-        if(shop){
-            console.log(shop)
-        res.json(shop)
+                res.json(shop)
+            }
+        
     }
 
     } catch (error) {

@@ -8,6 +8,8 @@ const sendEmail = require('./emailCtrl');
 const crypto = require('crypto')
 const Product = require('../models/productModel')
 const Cart = require('../models/cartModel')
+const Shop = require('../models/shopModel')
+const Seller = require('../models/sellerModel')
 
 
 const createUser = asyncHandler( async (req,res)=>{
@@ -155,7 +157,41 @@ const getTheConnectedUser = asyncHandler(async (req,res)=>{
             
     }
 })
-        
+     //check if user has shop or not
+const userHasShop = asyncHandler(
+    async (req,res)=>{
+        const {id} = req.user;
+        valideMongodbId(id);
+        try {
+            const  theconnectedUser = await User.findById(id)
+            const userRole = theconnectedUser.role
+            console.log(userRole)
+            if(userRole === 'seller') {
+                const theSeller = await Seller.findOne({userId : id})
+
+                const onwerId = theSeller._id
+
+                const theShop = await Shop.findOne({owner : onwerId})
+                if(theShop){
+                    res.json({hasShop:true,
+                        shopId : theShop._id,
+                    })
+                }else{
+                    res.json({hasShop:false})
+                }
+
+
+                
+
+            }else{
+                res.json({hasShop:false})
+            }
+        }
+        catch (error) {
+            throw new Error(error)
+            }
+        }
+)
 const DeleteOneUser = asyncHandler (async (req,res)=>{
 
             const {id} = req.params;
@@ -374,5 +410,5 @@ const saveAdress = asyncHandler(
 
 
 
-module.exports = {createUser,loginUser,getAllUser,getOneUser,DeleteOneUser,updateUser,getTheConnectedUser,
+module.exports = {createUser,loginUser,getAllUser,getOneUser,DeleteOneUser,updateUser,getTheConnectedUser,userHasShop,
     blockUser,unBlockUser,handelRefreshToken,logOut,updatePassWord,forgotPassword,saveAdress,getWishlist,resetPassword,loginAdmin};

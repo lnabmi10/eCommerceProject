@@ -3,6 +3,8 @@ const asyncHandler = require('express-async-handler')
 const valideMongodbId = require('../utils/validateMongodbId')
 const User = require('../models/userModel')
 const BankInfo = require('../models/bankInfoModel')
+const coudinaryUploadImg = require('../utils/cloudinary')
+
 
 
 const becomeSeller =  asyncHandler(
@@ -14,6 +16,21 @@ const becomeSeller =  asyncHandler(
 
 
         try{
+            
+        const  uploader =  (path) => {
+            return  coudinaryUploadImg(path,"images")  
+          }
+          const urls =[]
+          const files=req.files
+          for (const file of files){
+              const {path}=file
+              
+              const newPath = await uploader(path)
+              
+              urls.push(newPath)
+            //  fs.unlinkSync(path)
+  
+          }
             const bankinfodoc = await BankInfo.findOne({userId : id})
             if(bankinfodoc){
                 const bankID = bankinfodoc._id.toString()
@@ -21,7 +38,7 @@ const becomeSeller =  asyncHandler(
                 const newSeller = await Seller.create({
                     userId : id,
                     bankInformation : bankID,
-                    identityCardImg : req?.body.identityCardImg,
+                    identityCardImg : urls,
                    
                 })
                 const  theUpdatedUser = await User.findByIdAndUpdate(id,{

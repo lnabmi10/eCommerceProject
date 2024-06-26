@@ -7,7 +7,7 @@ const router = express.Router();
 
 
 router.post("/createproduct/:shopid",authMiddleware,isShopOwner,createProduct )
-router.put("/upload/:id",authMiddleware,isProductSeller,uploadImg.array('images',10),productImgResize,uploadProductImages)
+router.put("/upload/:id",/*authMiddleware,isProductSeller,*/uploadImg.array('images',10),productImgResize,uploadProductImages)
 router.get("/getoneproduct/:id",getOneProduct)
 router.get("/getallproducts",getAllProducts)
 router.put("/updateproduct/:id",authMiddleware,isProductSeller,updateProduct)

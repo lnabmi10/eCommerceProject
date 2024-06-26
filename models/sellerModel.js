@@ -4,7 +4,9 @@ var sellerSchema = new mongoose.Schema({
     
     userId : {type :mongoose.Schema.Types.ObjectId ,ref : "User" },
 
-    identityCardImg : [{ type: String, required: true}], 
+    identityCardImg : {
+        type : Array ,
+    }, 
     
     isBlocked : {
         type : Boolean,

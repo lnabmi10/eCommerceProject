@@ -107,6 +107,23 @@ const getOneProduct = asyncHandler(
 
     }
 )
+const getAllShopProducts = asyncHandler(
+    async (req, res) => {
+        try {
+            const shopId = req.params.shopId
+            console.log("shopId",shopId)
+            valideMongodbId(shopId)
+            
+
+            const shopProducts = await Product.find({ shop: shopId })
+            res.json(shopProducts);
+            
+        } catch (error) {
+            throw new Error(error)
+            
+        }
+    }
+)
 
 const getAllProducts = asyncHandler(
     async (req,res)=>{
@@ -295,4 +312,7 @@ const ratingProduct = asyncHandler(async(req,res)=>{
 
     
 
-module.exports={createProduct,getOneProduct,getAllProducts,updateProduct,deleteProduct,addToWishList,ratingProduct,uploadProductImages}
+module.exports = {
+    createProduct, getOneProduct, getAllProducts,getAllShopProducts,
+    updateProduct, deleteProduct, addToWishList, ratingProduct, uploadProductImages
+}

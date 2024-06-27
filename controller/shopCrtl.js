@@ -44,7 +44,7 @@ const  getYourShop = asyncHandler(async (req, res) => {
         const user = await User.findById(id)
         if (user.role === "seller"){
             const seller = await Seller.findOne({userId : id})
-            sellerId=seller._id
+            const sellerId=seller._id
             const shop = await Shop.find({owner : sellerId})
             if(shop){
 

@@ -38,8 +38,39 @@ const createProduct =  asyncHandler(
         }   }
 )
 // update Product
+const updateProduct = asyncHandler(async (req, res) => {
+    const { _id } = req.body;
+console.log("Product ID:", _id);
+    console.log("Request Body:", req.body);
+    
+    try {
+        // Only generate slug if title is being updated
+        if (req.body.title) {
+            req.body.slug = slugify(req.body.title, { lower: true });
+        }
 
-const updateProduct = asyncHandler(async(req,res)=>{
+        // Construct an update object with only the fields provided in the request body
+        const updateData = {};
+        const updatableFields = [
+            'title', 'slug', 'description', 'price', 'category', 
+            'brand', 'quantity', 'sold', 'color', 'images'
+        ];
+
+        updatableFields.forEach(field => {
+            if (req.body[field] !== undefined) {
+                updateData[field] = req.body[field];
+            }
+        });
+
+        const updatedProduct = await Product.findByIdAndUpdate(_id, updateData, { new: true });
+        console.log("Updated Product:", updatedProduct);
+        res.json(updatedProduct);
+    } catch (error) {
+        res.status(500);
+        throw new Error(error.message);
+    }
+});
+/*const updateProduct = asyncHandler(async(req,res)=>{
  
     const {id} = req.body;
    // valideMongodbId(id);
@@ -72,7 +103,7 @@ const updateProduct = asyncHandler(async(req,res)=>{
     }
 }
 
-)
+)*/
 // delete Product 
 const deleteProduct = asyncHandler(async(req,res)=>{
     const {id} = req.params
@@ -292,12 +323,17 @@ const ratingProduct = asyncHandler(async(req,res)=>{
               //  fs.unlinkSync(path)
 
             }
+             const existingProduct = await Product.findById(id);
+        if (!existingProduct) {
+            res.status(404);
+            throw new Error("Product not found");
+        }
+
+        // Append new URLs to the existing images
+            const updatedUrls = [...existingProduct.images, ...urls];
+            
             const updateProduct = await Product.findByIdAndUpdate(id,
-                {
-                images : urls.map( (file)=>{
-                    return file;
-                })
-            },{new:true})
+                {images :updatedUrls},{new:true})
 
             res.json(updateProduct)
 

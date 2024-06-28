@@ -11,7 +11,7 @@ router.put("/upload/:id",authMiddleware,isProductSeller,uploadImg.array('images'
 router.get("/getoneproduct/:id",getOneProduct)
 router.get("/getallproducts",getAllProducts)
 router.get("/getallshopproducts/:shopId",getAllShopProducts)
-router.put("/updateproduct/:id",authMiddleware,isProductSeller,updateProduct)
+router.put("/updateproduct/:productId",authMiddleware,/*isProductSeller,*/updateProduct)
 router.put("/addproducttowishlist",authMiddleware,addToWishList)
 router.put("/ratingproduct",authMiddleware,ratingProduct )
 router.delete("/deleteproduct/:id",authMiddleware,isProductSeller,deleteProduct)

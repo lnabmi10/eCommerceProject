@@ -21,7 +21,9 @@ var shopSchema = new mongoose.Schema({
         type:String,
         required:true,
     },
-
+    images : {
+        type : Array ,
+    },
     category : {
       
        type: String,

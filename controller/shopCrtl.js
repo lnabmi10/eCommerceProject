@@ -3,6 +3,8 @@ const valideMongodbId = require('../utils/validateMongodbId');
 const Shop = require('../models/shopModel')
 const Seller = require('../models/sellerModel')
 const User = require('../models/userModel')
+const coudinaryUploadImg = require('../utils/cloudinary')
+
 
 
 const  createShop = asyncHandler(async (req, res) => {
@@ -59,7 +61,36 @@ const  getYourShop = asyncHandler(async (req, res) => {
 
 })
 
+//add shop images
+const addShopImage = asyncHandler(async (req, res) => {
+    const { id } = req.user;
+    valideMongodbId(id);
+    const { shopId } = req.params;
+
+    try {
+        const uploader = (path) => {
+            return coudinaryUploadImg(path, "images");
+        };
+
+        const file = req.file; // Single file instead of multiple
+        const { path } = file;
+        const newPath = await uploader(path);
+        const urls = [newPath];
+
+        const shop = await Shop.findById(shopId);
+        
+        shop.images = [...shop.images, ...urls];
+
+        await shop.save();
+        console.log(shop)
+        res.json(shop);
+    } catch (error) {
+        throw new Error(error);
+    }
+});
+    
 
 
 
-module.exports={createShop,getYourShop}
+
+module.exports={createShop,getYourShop,addShopImage}

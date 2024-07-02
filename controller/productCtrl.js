@@ -169,7 +169,6 @@ const getAllProducts = asyncHandler(
             let queryStr = JSON.stringify(queryObj);
             console.log("queryStr",queryStr)
             queryStr = queryStr.replace(/\b(gte|lt|gt|lte)\b/g,match =>`$${match}`)
-            // if queryStr = {} fin(queryStr will get all the data in product collection)
 
             // getting the data
 

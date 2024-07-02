@@ -7,14 +7,14 @@ const User = require('../models/userModel')
 
 
 
-
 const addToCart = asyncHandler(
     async (req,res)=>{
         const {id}=req.user
         valideMongodbId(id)
         const prodCart=req.body;
         
-
+        console.log('prodCart',prodCart)  
+         console.log('id',id)
         
         try {
             let findUser = await User.findById(id)
@@ -24,6 +24,7 @@ const addToCart = asyncHandler(
         const cartAlreadyExist = await Cart.findOne({ ordredBy: findUser._id, cartStatus: "not processed" });
         const addtoTotal = getPrice.price*prodCart.count
 
+            console.log('addtoTotal',addtoTotal)
         if(!cartAlreadyExist){
         
             const newCart = await Cart.create({products : prodCart,
@@ -93,6 +94,24 @@ const getAllUserCarts = asyncHandler(async(req,res)=>{
     }}
 
 )
+const findOneCart = asyncHandler(
+    async (req, res) => {
+        const { id } = req.user;
+        console.log(id);
+
+        try {
+        
+            
+            const cart = await Cart.findOne({ ordredBy: id, cartStatus: "not processed" });
+            res.json(cart);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: "Server error" });
+        }
+    }
+);
+
+
 const getAllCarts = asyncHandler(async(req,res)=>{
    
 
@@ -122,34 +141,48 @@ const deleteCart = asyncHandler(async(req,res)=>{
 })
 
 // remove product from cart
-const removeFromCart= asyncHandler(
-    async (req,res)=> {
+const removeFromCart = asyncHandler(async (req, res) => {
+    const { id } = req.user;
+    const { productId } = req.params;
 
-        const {id}=req.user
-        const  {productId} = req.params;
-        const cart = await Cart.findOne({orderdBy:id, cartStatus: "not processed"})
-         console.log("this is the cart",cart.products);
+    try {
+        const cart = await Cart.findOne({ ordredBy: id, cartStatus: "not processed" });
+
         if (!cart) {
-            return res.status(401).send("No Cart Found")
-          } else if (cart.products.length==0) {
-              return res.status(404).send('The Cart is emty')
-              
-          } 
-          let productsInCart = [...cart.products]
-          
-          let index = productsInCart.indexOf(productId)
-          console.log(index)
-          
-          if (index === -1 ) {
-              return res.status(404).send('The Product is not in the Cart')
-          }
-          // remove item from array using filter() method
-          cart.products = cart.products.filter((item)=> item.toString()!==productId)
-          await cart.save()
-          res.json(cart.products)
-      }
-    
-   );
+            return res.status(401).send("No Cart Found");
+        } else if (cart.products.length === 0) {
+            return res.status(404).send('The Cart is empty');
+        }
+
+        const index = cart.products.findIndex(item => item.prodId.toString() === productId);
+
+        if (index === -1) {
+            return res.status(404).send('The Product is not in the Cart');
+        }
+        
+        let getPrice = await Product.findById(productId).select("price").exec();
+
+        console.log('getprice',getPrice)
+        // Calculate amount to deduct from cartTotal
+        const productToRemove = cart.products[index];
+        const deduction = productToRemove.count * getPrice.price;
+        console.log('deduction',deduction)
+        console.log('cart.cartTotal',cart.cartTotal)
+
+        // Update cartTotal
+        cart.cartTotal -= deduction;
+
+        // Remove product from cart
+        cart.products.splice(index, 1);
+
+        // Save updated cart
+        await cart.save();
+
+        res.json(cart.products);
+    } catch (error) {
+        throw new Error(error);
+    }
+});
    // changement de l status de la cart
 const updateCartStatus = asyncHandler(async (req,res)=>{
     const {id} = req.user;
@@ -171,4 +204,4 @@ const updateCartStatus = asyncHandler(async (req,res)=>{
 })
 
 
-module.exports={addToCart,getAllCarts,updateCartStatus,getAllUserCarts,removeFromCart,deleteCart }
+module.exports={addToCart,getAllCarts,updateCartStatus,findOneCart,getAllUserCarts,removeFromCart,deleteCart }
